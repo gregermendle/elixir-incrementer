@@ -1,1 +1,1 @@
-# Elixir Incrementer
+# Incrementer
