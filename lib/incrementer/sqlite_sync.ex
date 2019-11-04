@@ -8,7 +8,7 @@ defmodule Incrementer.SQLiteSync do
   def sync() do
     receive do
     after 10_000 ->
-      IO.inspect Incrementer.State.get_state(Incrementer.State)
+      state = Incrementer.State.get_state(Incrementer.State)
       sync()
     end
   end

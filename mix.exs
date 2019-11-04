@@ -25,7 +25,7 @@ defmodule Incrementer.MixProject do
       {:cowboy, "~> 1.0.0"},
       {:plug, "~> 1.5"},
       {:plug_cowboy, "~> 1.0"},
-      {:sqlite_ecto2, "~> 2.2"}
+      {:sqlite_ecto2, "~> 2.4"}
     ]
   end
 end
