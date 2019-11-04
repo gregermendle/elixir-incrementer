@@ -1,32 +1,30 @@
 defmodule Incrementer.State do
+  import Ecto.Query
   use GenServer
 
   def start_link(name \\ nil) do
-    GenServer.start_link(__MODULE__, %{}, [name: name])
+    GenServer.start_link(__MODULE__, :ok, [name: name])
   end
 
   def increment(pid, key, value) do
     GenServer.call(pid, {:increment, key, value})
   end
 
-  def get_state(pid) do
-    GenServer.call(pid, :get_state)
+  def sync(state) do
+    Numbers.Repo.insert_all(
+      Incrementer.Number,
+      Enum.reduce(state, [], fn {key, value}, acc -> [%{key: key, value: value} | acc] end),
+      on_conflict: :replace_all,
+      conflict_target: :key)
   end
 
   def schedule_sync() do
     Process.send_after(self(), :sync, 10_000)
   end
 
-  def sync() do
-    entries = Enum.reduce(get_state(self), [], fn {key, value}, acc -> [%{key: key, value: value} | acc] end)
-    {count, resp} = Numbers.Repo.insert_all(
-      Incrementer.Number,
-      entries,
-      on_conflict: :replace_all,
-      conflict_target: :key)
-  end
-
-  def init(state) do
+  def init(:ok) do
+    entries = Numbers.Repo.all(from n in Incrementer.Number, select: [n.key, n.value])
+    state = Map.new(Enum.map(entries, fn [key, value] -> {key, value} end))
     schedule_sync()
     {:ok, state}
   end
@@ -35,12 +33,9 @@ defmodule Incrementer.State do
     {:reply, :ok, Map.update(state, key, value, &(&1 + value))}
   end
 
-  def handle_call(:get_state, _from, state) do
-    {:reply, state, state}
-  end
-
   def handle_info(:sync, state) do
+    spawn(__MODULE__, :sync, [state])
     schedule_sync()
-    {:no_reply, state}
+    {:noreply, state}
   end
 end
