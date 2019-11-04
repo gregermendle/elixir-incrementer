@@ -11,8 +11,12 @@ defmodule Incrementer.Router do
   post "/increment" do
     case conn.params do
       %{"key" => key, "value" => value} -> 
-        Incrementer.State.increment(Incrementer.State, key, String.to_integer(value))
-        send_resp(conn, 200, "")
+        case Integer.parse(value) do
+          {parsed, ""} -> 
+            Incrementer.State.increment(Incrementer.State, key, parsed)
+            send_resp(conn, 200, "")
+          _ -> send_resp(conn, 500, "Value must be an integer!")
+        end        
       _ -> 
         send_resp(conn, 500, "Invalid input!")
     end
