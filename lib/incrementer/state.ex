@@ -10,6 +10,10 @@ defmodule Incrementer.State do
     GenServer.call(pid, {:increment, key, value})
   end
 
+  def get_state(pid) do
+    GenServer.call(pid, :get_state)
+  end
+
   def sync(state) do
     Numbers.Repo.insert_all(
       Incrementer.Number,
@@ -31,6 +35,10 @@ defmodule Incrementer.State do
 
   def handle_call({:increment, key, value}, _from, state) do
     {:reply, :ok, Map.update(state, key, value, &(&1 + value))}
+  end
+
+  def handle_call(:get_state, _from, state) do
+    {:reply, state, state}
   end
 
   def handle_info(:sync, state) do

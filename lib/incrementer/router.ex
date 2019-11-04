@@ -3,7 +3,7 @@ defmodule Incrementer.Router do
   use Plug.Debugger
   require Logger
 
-  plug Plug.Parsers, parsers: [:urlencoded]
+  plug Plug.Parsers, parsers: [:multipart]
   plug Plug.Logger, log: :debug
   plug :match
   plug :dispatch
