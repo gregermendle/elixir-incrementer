@@ -8,6 +8,7 @@ defmodule Incrementer.Supervisor do
   def init(:ok) do
     children = [
       worker(Incrementer.State, [Incrementer.State]),
+      Numbers.Repo,
       Incrementer.SQLiteSync,
       Plug.Adapters.Cowboy.child_spec(scheme: :http, plug: Incrementer.Router, options: [port: 3333])
     ]
