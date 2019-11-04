@@ -14,7 +14,7 @@ defmodule Incrementer.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :cowboy, :plug, :plug_cowboy],
+      extra_applications: [:logger, :sqlite_ecto2, :ecto, :cowboy, :plug, :plug_cowboy],
       mod: {Incrementer, []}
     ]
   end
@@ -24,7 +24,8 @@ defmodule Incrementer.MixProject do
     [
       {:cowboy, "~> 1.0.0"},
       {:plug, "~> 1.5"},
-      {:plug_cowboy, "~> 1.0"}
+      {:plug_cowboy, "~> 1.0"},
+      {:sqlite_ecto2, "~> 2.2"}
     ]
   end
 end
