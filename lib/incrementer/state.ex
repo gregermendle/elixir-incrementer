@@ -42,8 +42,8 @@ defmodule Incrementer.State do
   end
 
   def handle_info(:sync, state) do
-    spawn(__MODULE__, :sync, [state])
     schedule_sync()
+    spawn(__MODULE__, :sync, [state])
     {:noreply, state}
   end
 end
