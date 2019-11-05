@@ -22,9 +22,9 @@ defmodule Incrementer.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:cowboy, "~> 1.0.0"},
+      {:cowboy, "~> 2.7.0"},
       {:plug, "~> 1.5"},
-      {:plug_cowboy, "~> 1.0"},
+      {:plug_cowboy, "~> 2.1.0"},
       {:sqlite_ecto2, "~> 2.4"}
     ]
   end
